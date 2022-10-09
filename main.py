@@ -1,4 +1,5 @@
 from fpdf import FPDF
+import webbrowser
 
 
 class Bill:
@@ -22,7 +23,7 @@ class Flatmate:
         self.name = name
 
     def pays(self, bill, other_flatmate):
-        weight = self.days_in_flat/(self.days_in_flat + other_flatmate.days_in_flat)
+        weight = self.days_in_flat / (self.days_in_flat + other_flatmate.days_in_flat)
         return bill.amount * weight
 
 
@@ -38,8 +39,14 @@ class PdfReport:
         # See fpdf_test.py scratch for more information about PDF design
         pdf = FPDF(orientation="P", unit="pt", format="A4")
         pdf.add_page()
+
+        # Inserting Image
+        pdf.image("house.png", w=30, h=30)
+
+        # Inserting rest of content
         pdf.set_font(family="Times", size=24, style="B")
         pdf.cell(w=0, h=80, txt="Flatmates Bill", border=0, align="C", ln=1)
+        pdf.set_font(family="Times", size=14, style="B")
         pdf.cell(w=150, h=40, txt="Amount:", border=1)
         pdf.cell(w=200, h=40, txt=str(bill.amount), border=1, ln=1)
         pdf.cell(w=150, h=40, txt="Period:", border=1)
@@ -51,8 +58,11 @@ class PdfReport:
 
         pdf.output(self.filename)
 
+        # Opening the PDF file
+        webbrowser.open(self.filename)
 
-the_bill = Bill(amount=100, period= "September 2022")
+
+the_bill = Bill(amount=100, period="September 2022")
 Jorge = Flatmate(name="Jorge", days_in_flat=21)
 Veronika = Flatmate(name="Veronika", days_in_flat=19)
 
@@ -60,4 +70,3 @@ print(Jorge.pays(the_bill, Veronika))
 
 pdf_report = PdfReport(filename="Report.pdf")
 pdf_report.generate(bill=the_bill, flatmate1=Jorge, flatmate2=Veronika)
-
