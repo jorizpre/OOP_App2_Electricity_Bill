@@ -1,5 +1,6 @@
 import webbrowser
 from fpdf import FPDF
+import os
 
 
 class PdfReport:
@@ -16,7 +17,7 @@ class PdfReport:
         pdf.add_page()
 
         # Inserting Image
-        pdf.image("house.png", w=30, h=30)
+        pdf.image("files/house.png", w=30, h=30)
 
         # Inserting rest of content
         pdf.set_font(family="Times", size=24, style="B")
@@ -31,7 +32,8 @@ class PdfReport:
         pdf.cell(w=150, h=40, txt=flatmate2.name, border=0)
         pdf.cell(w=200, h=40, txt=str(round(flatmate2.pays(bill, flatmate1), ndigits=2)), border=0, ln=1)
 
-        pdf.output(self.filename)
+        pdf.output(f"files/{self.filename}")
 
         # Opening the PDF file
+        os.chdir("files") # changing current directory to "files" so that the browser can open the document
         webbrowser.open(self.filename)
